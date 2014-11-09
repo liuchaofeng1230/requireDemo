@@ -1,6 +1,3 @@
-// require(['table'], function(table){
-// });
-
 define("Employee", ["Company"], function(Company) {
     return function (name) {
         this.name = name;
