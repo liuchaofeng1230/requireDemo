@@ -22,7 +22,7 @@ define('b', ['a'], function(a){
     };
 });
 
-require(["b"], function (Employee, Company) {
+require(["b"], function (b) {
 });
 
 ```
@@ -50,7 +50,7 @@ define('b', ['a'], function(a){
     };
 });
 
-require(["b"], function (Employee, Company) {
+require(["b"], function (b) {
 });
 ```
 
