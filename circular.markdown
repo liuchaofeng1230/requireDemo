@@ -94,7 +94,7 @@ define("main", ["Employee", "Company"], function (Employee, Company) {
 
 有以下几种方法解决循环依赖
 
-### 1. event
+### 1. event(引入第三方模块)
 
 ```
 define("event", function(){
@@ -116,11 +116,9 @@ define("Employee", ["Company", "event"], function(Company, Event) {
         this.name = name;
         this.company = new Company(name + "'s own company");
     };
-
     Event.on('Employee:new', function(name){
         return new Employee(name);
     });
-
     return Employee;
 });
 
@@ -161,6 +159,7 @@ define("Employee", ["Company"], function(Company) {
         this.company = new Company(name + "'s own company");
     };
 });
+
 define("Company", ["require", "Employee"], function(require, Employee) {
     function Company(name) {
         this.name = name;
@@ -179,6 +178,7 @@ define("Company", ["require", "Employee"], function(require, Employee) {
     };
     return Company;
 });
+
 define("main", ["Employee", "Company"], function (Employee, Company) {
     var john = new Employee("John");
     var bigCorp = new Company("Big Corp");
@@ -190,6 +190,7 @@ define("main", ["Employee", "Company"], function (Employee, Company) {
 可以在console里看到，正确执行了代码。静态循环依赖的问题在于，因为循环依赖，所以初始化时候Company模块中获得的Employee模块其实是undefined，但通过require方法，在实际用到Emplyee模块时重新去获取了一遍，此时因为Employee模块已经被执行过有了具体的对象，静态循环依赖的问题演变成了动态的循环依赖，代码就能正常运行了。
 
 ### 3. exports
+
 ```
 define("Employee", ["exports", "Company"], function(exports, Company) {
     function Employee(name) {
@@ -216,6 +217,7 @@ define("Company", ["exports", "Employee"], function(exports, Employee) {
     };
     exports.Company = Company;
 });
+
 define("main", ["Employee", "Company"], function (Employee, Company) {
     var john = new Employee.Employee("John");
     var bigCorp = new Company.Company("Big Corp");
