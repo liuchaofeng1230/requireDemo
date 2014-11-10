@@ -1,23 +1,16 @@
-// require(['table'], function(table){
-//     table.load();
-// });
-
-define("Employee", ["exports", "Company"], function(exports, Company) {
-    console.log(Company);
-    function Employee(name) {
+define("Employee", ["Company"], function(Company) {
+    return function Employee(name) {
         this.name = name;
-        this.company = new Company.Company(name + "'s own company");
-    }
-    exports.Employee = Employee;
+        this.company = new Company(name + "'s own company");
+    };
 });
-define("Company", ["exports", "Employee"], function(exports, Employee) {
-    console.log(Employee);
+define("Company", ["require", "Employee"], function(require, Employee) {
     function Company(name) {
         this.name = name;
         this.employees = [];
     }
     Company.prototype.addEmployee = function(name) {
-        var employee = new Employee.Employee(name);
+        var employee = new (require('Employee'))(name);
         this.employees.push(employee);
         employee.company = this;
     };
@@ -27,11 +20,11 @@ define("Company", ["exports", "Employee"], function(exports, Employee) {
         });
         console.log(names);
     };
-    exports.Company = Company;
+    return Company;
 });
 define("main", ["Employee", "Company"], function (Employee, Company) {
-    var john = new Employee.Employee("John");
-    var bigCorp = new Company.Company("Big Corp");
+    var john = new Employee("John");
+    var bigCorp = new Company("Big Corp");
     bigCorp.addEmployee("Mary");
     bigCorp.showEmployee();
 });
